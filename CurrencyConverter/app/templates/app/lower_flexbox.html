@@ -1,0 +1,66 @@
+﻿{% extends "app/index.html" %}
+
+{% block lower_flexbox %}
+<style>
+    .lower_flexbox {
+        width: 620px;
+    }
+    .text_input {
+        width: 100px;
+    }
+</style>
+
+<div class="align-self-end">
+    <div class="shadow-lg p-3 mt-5 bg-white rounded lower_flexbox border ml-5">
+        
+        <form action="" method="POST">
+            {% csrf_token %}
+            <input class="text_input" type="text" id="val_in" placeholder="{{val_in}}">
+            <select class="form-select" aria-label="Default select example">
+                {%for item in country%}
+                <option value="{{item}}" {%if item == from_curr %}selected {% endif %}>{{item}}</option>
+                {% endfor %}
+            </select>
+
+            <select class="form-select" aria-label="Default select example">
+                {%for item in country%}
+                <option value="{{item}}" {%if item == to_curr %}selected {% endif %}>{{item}}</option>
+                {% endfor %}
+            </select>
+            <input class="text_input" type="text" id="val_out" placeholder="{{val_out}}" readonly>
+        </form>
+    </div>
+</div>
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    $('#val_in').bind('input', function () {
+        $.ajax({
+            url: "{% url 'home' %}",
+            method: 'post',
+            data: { 'val_in': $('#val_in').val() },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            },
+            success: function (data) {
+                console.log(data['val_out']);
+                $('#val_out').val(data['val_out']);
+            }
+        });
+    });
+</script>
+{% endblock lower_flexbox %}
