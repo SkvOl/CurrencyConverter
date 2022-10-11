@@ -1,2 +1,4 @@
 C:\Users\SkvOl\Documents\Visual Studio 2022\works\CurrencyConverter\CurrencyConverter\obj\Any CPU\Debug\CurrencyConverter.pyproj.SuggestedBindingRedirects.cache
 C:\Users\SkvOl\Documents\Visual Studio 2022\works\CurrencyConverter\CurrencyConverter\obj\Any CPU\Debug\CurrencyConverter.pyproj.CoreCompileInputs.cache
+C:\Users\user\Documents\Work\VS 2022\CurrencyConverter\CurrencyConverter\obj\Any CPU\Debug\CurrencyConverter.pyproj.SuggestedBindingRedirects.cache
+C:\Users\user\Documents\Work\VS 2022\CurrencyConverter\CurrencyConverter\obj\Any CPU\Debug\CurrencyConverter.pyproj.CoreCompileInputs.cache

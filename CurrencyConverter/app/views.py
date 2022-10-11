@@ -6,6 +6,19 @@ from datetime import date, timedelta, datetime
 import requests
 import json
 
+def create_graph(headers, _to, _from, date_start, date_end):
+
+    url = f"https://api.apilayer.com/currency_data/timeframe?start_date={date_start}&end_date={date_end.strftime('%Y-%m-%d')}&currencies={_to}&source={_from}"
+    timeframe = requests.request("GET", url, headers = headers, data = {}).json()['quotes']
+        
+    x = timeframe.keys()
+    y = [] 
+    for item in timeframe.values():
+        y.append(item[_from + _to])
+
+    fig = go.Figure([go.Scatter(x = tuple(x), y = tuple(y))])
+    fig.write_html("static/app/content/graph.html")
+
 def home(request):
     headers = {
                 "apikey": "lrNtlKpIAVhJ6JrHHhPltV6AjUX6ozmj",
@@ -13,7 +26,11 @@ def home(request):
 
     if request.method == "POST":
         val_in = request.POST.get('val_in')
+        _from = request.POST.get('from_curr')
+        _to = request.POST.get('to_curr')
         print(val_in)
+        print(_to)
+        print(_from)
        
         val_out = int(val_in) * 5  if val_in != "" else 0 
 
@@ -35,7 +52,9 @@ def home(request):
             ip = request.META.get('REMOTE_ADDR')
         #вычисляем ip пользователя
 
-        ip = '103.250.73.178' #проверка поиска на примере Японского IP
+        #ip = '103.250.73.178' #проверка поиска на примере Японского IP
+        #ip = '144.123.46.90' #проверка поиска на примере Китайского IP (не работает)
+        ip = '94.181.131.229'
         #вычисляем вычисляем где он живёт и находим валюту в его стране
         if ip == '127.0.0.1':
             _from = 'RUB'
@@ -54,32 +73,23 @@ def home(request):
                     break
         
 
-        _to = 'RUB'
+        if _from == 'RUB':
+            _to = 'USD'
+        else:
+           _to = 'RUB'
+
         #вычисляем вычисляем где он живёт и находим валюту в его стране
         val_out = 1
 
-        val_in = 6
-        #url = f"https://api.apilayer.com/currency_data/convert?to={_from}&from={_to}&amount={val_out}"
-        #val_in = requests.request("GET", url, headers = headers, data = {}).json()['result']
-        #print(val_in) 
+        url = f"https://api.apilayer.com/currency_data/convert?to={_from}&from={_to}&amount={val_out}"
+        val_in = requests.request("GET", url, headers = headers, data = {}).json()['result']
+
 
         date_end = datetime.now()
         date_start = (date_end - timedelta(30)).strftime("%Y-%m-%d")
         
-
-        #url = f"https://api.apilayer.com/currency_data/timeframe?start_date={date_start}&end_date={date_end.strftime('%Y-%m-%d')}&currencies={_to}&source={_from}"
-        #timeframe = requests.request("GET", url, headers = headers, data = {}).json()['quotes']
+        create_graph(headers, _to, _from, date_start, date_end)
         
-        #x = timeframe.keys()
-        #y = [] 
-        #for item in timeframe.values():
-        #    y.append(item[_from + _to])
-
-        #fig = go.Figure([go.Scatter(x = tuple(x), y = tuple(y))])
-        #fig.write_html("static/graph.html")
-
-        
-
         return render(
             request,
             'app/lower_flexbox.html',

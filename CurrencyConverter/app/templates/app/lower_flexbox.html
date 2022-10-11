@@ -16,13 +16,13 @@
         <form action="" method="POST">
             {% csrf_token %}
             <input class="text_input" type="text" id="val_in" placeholder="{{val_in}}">
-            <select class="form-select" aria-label="Default select example">
+            <select id="from_curr" class="form-select" aria-label="Default select example">
                 {%for item in country%}
                 <option value="{{item}}" {%if item == from_curr %}selected {% endif %}>{{item}}</option>
                 {% endfor %}
             </select>
 
-            <select class="form-select" aria-label="Default select example">
+            <select id="to_curr" class="form-select" aria-label="Default select example">
                 {%for item in country%}
                 <option value="{{item}}" {%if item == to_curr %}selected {% endif %}>{{item}}</option>
                 {% endfor %}
@@ -52,12 +52,31 @@
         $.ajax({
             url: "{% url 'home' %}",
             method: 'post',
-            data: { 'val_in': $('#val_in').val() },
+            //data: { 'val_in': $('#val_in').val() },
+            data: { 'val_in': $('#val_in').val(), 'from_curr': $('#from_curr').val(), 'to_curr': $('#to_curr').val() },
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
             },
             success: function (data) {
                 console.log(data['val_out']);
+                $('#val_out').val(data['val_out']);
+            }
+        });
+    });
+
+    $('#from_curr').bind('select', function () {
+        console.log("bind:");
+        $.ajax({
+            url: "{% url 'home' %}",
+            method: 'post',
+            data: { 'val_in': $('#val_in').val(), 'from_curr': $('#from_curr').val(), 'to_curr': $('#to_curr').val() },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+            },
+            success: function (data) {
+                console.log(data['val_out']);
+                console.log(data['from_curr']);
+                console.log(data['to_curr']);
                 $('#val_out').val(data['val_out']);
             }
         });
