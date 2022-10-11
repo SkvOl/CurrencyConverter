@@ -1,13 +1,14 @@
 ﻿from django.shortcuts import render
 from django.http import HttpRequest
 from django.http import JsonResponse
+import plotly.graph_objects as go
 from datetime import date, timedelta, datetime
 import requests
 import json
 
 def home(request):
     headers = {
-                "apikey": "FTN2LmEsdv2A5Ja3Gkop4cfu5ux2eooD",
+                "apikey": "lrNtlKpIAVhJ6JrHHhPltV6AjUX6ozmj",
              }
 
     if request.method == "POST":
@@ -57,18 +58,27 @@ def home(request):
         #вычисляем вычисляем где он живёт и находим валюту в его стране
         val_out = 1
 
-        url = f"https://api.apilayer.com/currency_data/convert?to={_from}&from={_to}&amount={val_out}"
-        val_in = requests.request("GET", url, headers = headers, data = {}).json()['result']
-        print(val_in)
+        val_in = 6
+        #url = f"https://api.apilayer.com/currency_data/convert?to={_from}&from={_to}&amount={val_out}"
+        #val_in = requests.request("GET", url, headers = headers, data = {}).json()['result']
+        #print(val_in) 
 
-        d_now = datetime.now()
-        array_date = {}#{d_now.strftime("%Y-%m-%d") : 0}
-        print(array_date)
-        for i in range(30):
-            d_current = (d_now - timedelta(i)).strftime("%Y-%m-%d")
-            url = f"https://api.apilayer.com/currency_data/historical?date={d_current}"
-            history = requests.request("GET", url, headers = headers, data = d_current).json()['quotes']
-            array_date[d_current] = int(history['USD'+_from]/history['USD'+_to])
+        date_end = datetime.now()
+        date_start = (date_end - timedelta(30)).strftime("%Y-%m-%d")
+        
+
+        #url = f"https://api.apilayer.com/currency_data/timeframe?start_date={date_start}&end_date={date_end.strftime('%Y-%m-%d')}&currencies={_to}&source={_from}"
+        #timeframe = requests.request("GET", url, headers = headers, data = {}).json()['quotes']
+        
+        #x = timeframe.keys()
+        #y = [] 
+        #for item in timeframe.values():
+        #    y.append(item[_from + _to])
+
+        #fig = go.Figure([go.Scatter(x = tuple(x), y = tuple(y))])
+        #fig.write_html("static/graph.html")
+
+        
 
         return render(
             request,
