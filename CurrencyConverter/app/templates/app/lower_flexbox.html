@@ -16,13 +16,13 @@
         <form action="" method="POST">
             {% csrf_token %}
             <input class="text_input" type="text" id="val_in" value="{{val_in}}">
-            <select id="from_currency" class="form-select" aria-label="Default select example">
+            <select id="from_currency" class="form-control" aria-label="Default select example">
                 {%for item in country%}
                 <option  value="{{item}}" {%if item == from_curr %}selected {% endif %}>{{item}}</option>
                 {% endfor %}
             </select>
 
-            <select id="to_currency" class="form-select" aria-label="Default select example">
+            <select id="to_currency" class="form-control" aria-label="Default select example">
                 {%for item in country%}
                 <option value="{{item}}" {%if item == to_curr %}selected {% endif %}>{{item}}</option>
                 {% endfor %}
